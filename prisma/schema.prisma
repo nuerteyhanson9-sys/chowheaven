@@ -1,0 +1,366 @@
+// Chow Heaven — relational schema (PostgreSQL)
+// Naming: snake_case columns, plural table names, indexed FKs to avoid N+1.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ------------- Users & identity -------------
+
+enum Role {
+  CUSTOMER
+  STAFF
+  ADMIN
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  passwordHash String
+  fullName     String
+  phone        String?
+  role         Role       @default(CUSTOMER)
+  avatarUrl    String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  customer     Customer?
+  addresses    Address[]
+  favorites    Favorite[]
+  cart         Cart?
+  orders       Order[]
+  reservations Reservation[]
+  reviews      Review[]
+  passwordResets PasswordReset[]
+
+  @@index([role])
+}
+
+model Customer {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  loyaltyPoints Int      @default(0)
+  totalSpent    Decimal  @default(0) @db.Decimal(12, 2)
+  ordersCount   Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Address {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label     String   @default("Home")
+  street    String
+  city      String
+  state     String
+  zip       String?
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  orders Order[]
+
+  @@index([userId])
+}
+
+model PasswordReset {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ------------- Menu & catalog -------------
+
+model MenuCategory {
+  id          String       @id @default(cuid())
+  name        String
+  slug        String       @unique
+  description String?
+  ordering    Int          @default(0)
+  imageUrl    String?
+  items       MenuItem[]
+}
+
+model MenuItem {
+  id          String           @id @default(cuid())
+  categoryId  String
+  category    MenuCategory     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name        String
+  slug        String           @unique
+  description String
+  price       Decimal          @db.Decimal(12, 2)
+  discountPrice Decimal?       @db.Decimal(12, 2)
+  imageUrl    String?
+  ingredients String[]         @default([])
+  allergens   String[]         @default([])
+  spiceLevel  Int              @default(0) // 0 none .. 3 extra hot
+  isVegetarian Boolean         @default(false)
+  available   Boolean          @default(true)
+  isFeatured  Boolean          @default(false)
+  tags        String[]         @default([])
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  options    MenuItemOption[]
+  orderItems OrderItem[]
+  favorites  Favorite[]
+
+  @@index([categoryId])
+  @@index([available, isFeatured])
+}
+
+model MenuItemOption {
+  id           String   @id @default(cuid())
+  menuItemId   String
+  menuItem     MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  groupName    String // e.g. "Protein", "Spice level", "Extra"
+  optionName   String // e.g. "Grilled chicken", "Extra suya spice"
+  priceModifier Decimal @default(0) @db.Decimal(12, 2)
+  isDefault    Boolean  @default(false)
+
+  @@index([menuItemId])
+}
+
+// ------------- Cart (persisted for authenticated users) -------------
+
+model Cart {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     Json     // [{ itemId, qty, note, options:[{groupName,optionName,priceModifier}] }]
+  updatedAt DateTime @updatedAt
+}
+
+// ------------- Orders & transactions -------------
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  READY
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum OrderType {
+  DELIVERY
+  PICKUP
+}
+
+model Order {
+  id           String     @id @default(cuid())
+  orderNumber  Int        @unique @default(autoincrement())
+  userId       String?
+  user         User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  orderType    OrderType  @default(DELIVERY)
+  status       OrderStatus @default(PENDING)
+  customerName String
+  customerPhone String
+  customerEmail String?
+  addressId    String?
+  address      Address?   @relation(fields: [addressId], references: [id], onDelete: SetNull)
+  addressText  String?    // snapshot for delivery orders
+  subtotal     Decimal    @db.Decimal(12, 2)
+  deliveryFee  Decimal    @default(0) @db.Decimal(12, 2)
+  discount     Decimal    @default(0) @db.Decimal(12, 2)
+  total        Decimal    @db.Decimal(12, 2)
+  couponCode   String?
+  note         String?
+  scheduledFor DateTime?
+  statusHistory Json       @default("[]") // [{ status, at, msg }]
+  etaMin       Int?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  items      OrderItem[]
+  payment    Payment?
+  reviews    Review[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([orderType])
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItemId  String?
+  menuItem    MenuItem? @relation(fields: [menuItemId], references: [id], onDelete: SetNull)
+  name        String
+  categoryName String? // snapshot for analytics by category
+  imageUrl    String?
+  price       Decimal  @db.Decimal(12, 2) // price at purchase
+  quantity    Int
+  customizations Json  @default("[]") // [{ groupName, optionName, priceModifier }]
+  note        String?
+
+  @@index([orderId])
+  @@index([menuItemId])
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  SUCCESSFUL
+  FAILED
+  CANCELLED
+}
+
+enum PaymentProviderName {
+  DEMO
+  PAYSTACK
+  FLUTTERWAVE
+}
+
+model Payment {
+  id            String               @id @default(cuid())
+  orderId       String               @unique
+  order         Order                @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  amount        Decimal              @db.Decimal(12, 2)
+  status        PaymentStatus        @default(PENDING)
+  provider      PaymentProviderName  @default(DEMO)
+  method        String?              // "card" | "bank_transfer" | "ussd" | "pay_on_pickup"
+  transactionId String?              // provider reference / token
+  reference     String               @unique
+  metadata      Json?
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+
+  @@index([status])
+}
+
+// ------------- Reservations & engagement -------------
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+  CANCELLED
+  ARRIVED
+  COMPLETED
+}
+
+enum Occasion {
+  DINING
+  BIRTHDAY
+  ANNIVERSARY
+  PROPOSAL
+  BUSINESS
+  FAMILY_DINNER
+  OTHER
+}
+
+model Reservation {
+  id             String            @id @default(cuid())
+  userId         String?
+  user           User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  name           String
+  phone          String
+  email          String?
+  date           DateTime          @db.Date
+  time           String // "18:30"
+  guests         Int
+  occasion       Occasion          @default(DINING)
+  specialRequest String?
+  status         ReservationStatus @default(PENDING)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([userId])
+  @@index([date])
+  @@index([status])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  orderId   String?
+  order     Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  customerName String?
+  rating    Int
+  comment   String?
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([orderId])
+  @@index([approved])
+  @@index([rating])
+}
+
+model Favorite {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  menuItemId String
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, menuItemId])
+  @@index([userId])
+}
+
+// ------------- Content & settings -------------
+
+enum GalleryCategory {
+  FOOD
+  RESTAURANT
+  PEOPLE
+  EVENTS
+  BEHIND_THE_SCENES
+}
+
+model GalleryImage {
+  id       String          @id @default(cuid())
+  category GalleryCategory @default(FOOD)
+  title    String
+  imageUrl String
+  alt      String?
+  ordering Int             @default(0)
+  active   Boolean         @default(true)
+  createdAt DateTime        @default(now())
+
+  @@index([category, active])
+}
+
+enum CouponType {
+  PERCENTAGE
+  FIXED
+  FREE_DELIVERY
+}
+
+model Coupon {
+  id             String     @id @default(cuid())
+  code           String     @unique
+  discountType   CouponType
+  discountValue  Decimal    @db.Decimal(12, 2)
+  expiryDate     DateTime?
+  minOrderValue  Decimal    @default(0) @db.Decimal(12, 2)
+  usageLimit     Int?
+  usageCount     Int        @default(0)
+  active         Boolean    @default(true)
+  createdAt      DateTime   @default(now())
+
+  @@index([code, active])
+}
+
+model RestaurantSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
