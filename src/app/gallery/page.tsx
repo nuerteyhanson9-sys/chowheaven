@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 
 export const revalidate = 120;
 
-const MONTAGE_1 = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Suya_with_pepper_sauce.jpg/1200px-Suya_with_pepper_sauce.jpg";
-const MONTAGE_2 = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/A_plate_of_jollof_rice_and_chicken.jpg/1200px-A_plate_of_jollof_rice_and_chicken.jpg";
+const MONTAGE_1 = "/images/menu/suya-platter.jpg";
+const MONTAGE_2 = "/images/menu/party-jollof.jpg";
 const MONTAGE_3 = "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1400&q=70";
 const MONTAGE_4 = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pot_of_Egusi_soup.jpg/960px-Pot_of_Egusi_soup.jpg";
 

@@ -14,7 +14,7 @@ import { PageHero } from "@/components/ui/page-hero";
 const HERO_1 = "/images/menu/grilled-catfish.jpg";
 const HERO_2 = "/images/menu/party-jollof.jpg";
 const HERO_3 = "/images/menu/suya-platter.jpg";
-const STORY_IMG = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Suya_with_pepper_sauce.jpg/1200px-Suya_with_pepper_sauce.jpg";
+const STORY_IMG = "/images/menu/suya-platter.jpg";
 const INTRO_IMG = "/images/menu/party-jollof.jpg";
 
 export const revalidate = 120;

@@ -10,7 +10,7 @@ import { useCart } from "@/components/providers/cart-provider";
 
 type NavUser = { name: string; email: string; role: string } | null;
 
-const MOBILE_BG = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/A_plate_of_jollof_rice_and_chicken.jpg/960px-A_plate_of_jollof_rice_and_chicken.jpg";
+const MOBILE_BG = "/images/menu/party-jollof.jpg";
 
 export function MobileMenu({
   open,

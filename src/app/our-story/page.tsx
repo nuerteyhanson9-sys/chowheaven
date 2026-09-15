@@ -13,11 +13,12 @@ export const metadata: Metadata = {
     "The story of Chow Heaven — how a Lagos home kitchen grew into a premium Nigerian dining experience.",
 };
 
-const STORY_IMG_1 = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Suya_with_pepper_sauce.jpg/1200px-Suya_with_pepper_sauce.jpg";
+const STORY_IMG_1 = "/images/menu/suya-platter.jpg";
 const STORY_IMG_2 = "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1200&q=70";
 const STORY_IMG_3 = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pot_of_Egusi_soup.jpg/960px-Pot_of_Egusi_soup.jpg";
 const INTERIOR_IMG = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=70";
-const KITCHEN_IMG = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/A_plate_of_jollof_rice_and_chicken.jpg/1200px-A_plate_of_jollof_rice_and_chicken.jpg";
+const CHEF_KITCHEN_IMG = "/images/menu/chef-in-kitchen.jpg";
+const KITCHEN_IMG = "/images/menu/party-jollof.jpg";
 
 export default async function OurStoryPage() {
   const settings = await getSettings();
@@ -100,7 +101,7 @@ export default async function OurStoryPage() {
           <div className="order-2 lg:order-1">
             <Reveal>
               <div className="relative aspect-[4/3] overflow-hidden">
-                <Image src={STORY_IMG_2} alt="Chef plating a dish with care at Chow Heaven" fill className="object-cover" sizes="(max-width:1024px) 100vw, 50vw" />
+                <Image src={CHEF_KITCHEN_IMG} alt="Chow Heaven chef in the kitchen, plating a dish with care" fill className="object-cover" sizes="(max-width:1024px) 100vw, 50vw" />
               </div>
             </Reveal>
           </div>

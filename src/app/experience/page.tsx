@@ -13,9 +13,9 @@ export const metadata: Metadata = {
 
 const INTERIOR_1 = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=70";
 const INTERIOR_2 = "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1600&q=70";
-const CHEF = "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1400&q=70";
-const FOOD_1 = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/A_plate_of_jollof_rice_and_chicken.jpg/1200px-A_plate_of_jollof_rice_and_chicken.jpg";
-const FOOD_2 = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Suya_with_pepper_sauce.jpg/1200px-Suya_with_pepper_sauce.jpg";
+const CHEF = "/images/menu/chef-in-kitchen.jpg";
+const FOOD_1 = "/images/menu/party-jollof.jpg";
+const FOOD_2 = "/images/menu/suya-platter.jpg";
 const FOOD_3 = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Puff_Puff.jpg/960px-Puff_Puff.jpg";
 const DRINK = "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1400&q=70";
 
