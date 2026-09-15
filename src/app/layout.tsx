@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Playfair_Display, Manrope } from "next/font/google";
+import { Fraunces, Manrope } from "next/font/google";
 import { Toaster } from "sonner";
 
 import "./globals.css";
@@ -9,8 +9,9 @@ import { getSessionPayload } from "@/lib/auth";
 import { CartProvider } from "@/components/providers/cart-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { PageTransition } from "@/components/layout/page-transition";
 
-const serif = Playfair_Display({
+const serif = Fraunces({
   subsets: ["latin"],
   variable: "--font-serif",
   display: "swap",
@@ -103,7 +104,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             user={session ? { name: session.name, email: session.email, role: session.role } : null}
             settings={settings}
           />
-          <main id="main-content">{children}</main>
+          <main id="main-content">
+            <PageTransition>{children}</PageTransition>
+          </main>
           <Footer settings={settings} />
         </CartProvider>
         <Toaster

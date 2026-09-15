@@ -5,6 +5,7 @@ import { MapPin, Phone } from "lucide-react";
 
 import { getSettings } from "@/lib/settings";
 import { Reveal } from "@/components/ui/reveal";
+import { PageHero } from "@/components/ui/page-hero";
 
 export const metadata: Metadata = {
   title: "Our Story",
@@ -15,7 +16,8 @@ export const metadata: Metadata = {
 const STORY_IMG_1 = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Suya_with_pepper_sauce.jpg/1200px-Suya_with_pepper_sauce.jpg";
 const STORY_IMG_2 = "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1200&q=70";
 const STORY_IMG_3 = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pot_of_Egusi_soup.jpg/960px-Pot_of_Egusi_soup.jpg";
-const INTERIOR_IMG = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=70";
+const INTERIOR_IMG = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=70";
+const KITCHEN_IMG = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/A_plate_of_jollof_rice_and_chicken.jpg/1200px-A_plate_of_jollof_rice_and_chicken.jpg";
 
 export default async function OurStoryPage() {
   const settings = await getSettings();
@@ -23,18 +25,26 @@ export default async function OurStoryPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative flex min-h-[52vh] items-center overflow-hidden bg-night">
-        <Image src={INTERIOR_IMG} alt="The warm, intimate dining room of Chow Heaven" fill priority className="object-cover opacity-45" sizes="100vw" />
-        <div className="absolute inset-0 bg-gradient-to-b from-night/70 via-transparent to-night/70" />
-        <div className="relative z-10 container-x py-24 text-center">
-          <Reveal>
-            <p className="eyebrow text-gold-soft justify-center">Our Story</p>
-            <h1 className="mt-5 font-serif text-4xl font-semibold tracking-tightest text-paper sm:text-6xl">
-              From a Lagos kitchen<br />to the world&apos;s table.
-            </h1>
-          </Reveal>
-        </div>
-      </section>
+      <PageHero
+        images={[
+          { src: INTERIOR_IMG, alt: "The warm, intimate dining room of Chow Heaven in Lagos" },
+          { src: STORY_IMG_2, alt: "A Chow Heaven chef plating a dish with precision" },
+          { src: KITCHEN_IMG, alt: "Plate of house-special party jollof with grilled chicken" },
+        ]}
+        eyebrow="Our Story"
+        title={
+          <>
+            FROM A LAGOS KITCHEN<br />
+            TO THE WORLD&apos;S TABLE.
+          </>
+        }
+        subtitle="A story rooted in Nigerian food, family, hospitality, and the flavours that bring us home."
+        ctas={[
+          { href: "/menu", label: "Taste It", variant: "gold" },
+          { href: "/experience", label: "The Experience", variant: "outline-light" },
+        ]}
+        align="center"
+      />
 
       {/* Editorial story */}
       <section className="section-space">

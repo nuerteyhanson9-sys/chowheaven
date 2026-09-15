@@ -77,6 +77,7 @@ export const NAV_LINKS = [
   { href: "/our-story", label: "Our Story" },
   { href: "/gallery", label: "Gallery" },
   { href: "/reservations", label: "Reservations" },
+  { href: "/experience", label: "Experience" },
 ];
 
 export const DEMO_CREDENTIALS = {

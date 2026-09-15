@@ -2,13 +2,15 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { X, UtensilsCrossed, UserRound, MapPin, Phone, Clock } from "lucide-react";
+import { X, UtensilsCrossed, UserRound, MapPin, Phone, Clock, Home } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { NAV_LINKS } from "@/lib/constants";
 import { useCart } from "@/components/providers/cart-provider";
 
 type NavUser = { name: string; email: string; role: string } | null;
+
+const MOBILE_BG = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/A_plate_of_jollof_rice_and_chicken.jpg/960px-A_plate_of_jollof_rice_and_chicken.jpg";
 
 export function MobileMenu({
   open,
@@ -33,10 +35,7 @@ export function MobileMenu({
     return () => document.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-  const experience = [
-    { label: "Our Story", href: "/our-story", icon: null },
-    { label: "Experience", href: "/our-story#experience", icon: null },
-  ];
+  const allLinks = [{ href: "/", label: "Home" }, ...NAV_LINKS];
 
   return (
     <div
@@ -46,99 +45,114 @@ export function MobileMenu({
       )}
       aria-hidden={!open}
     >
+      {/* Backdrop */}
       <div
         className={cn(
-          "absolute inset-0 bg-night/60 backdrop-blur-sm transition-opacity duration-300",
+          "absolute inset-0 bg-night/70 backdrop-blur-[2px] transition-opacity duration-400",
           open ? "opacity-100" : "opacity-0",
         )}
         onClick={onClose}
       />
+
+      {/* Panel */}
       <div
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label="Site navigation"
         className={cn(
-          "absolute inset-y-0 right-0 flex w-full max-w-sm flex-col bg-paper shadow-lift transition-transform duration-300 ease-out",
-          open ? "translate-x-0" : "translate-x-full",
+          "absolute inset-0 flex flex-col overflow-y-auto transition-all duration-500 ease-out",
+          open ? "opacity-100 translate-x-0 scale-x-100" : "opacity-0 translate-x-8 scale-x-105",
         )}
       >
-        <div className="flex items-center justify-between border-b border-ink/10 px-6 py-5">
-          <span className="font-serif text-xl font-bold">
-            Chow<span className="text-gold">Heaven</span>
-          </span>
-          <button
-            onClick={onClose}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-sm text-ink hover:bg-ink/5"
-            aria-label="Close menu"
-          >
-            <X className="h-6 w-6" strokeWidth={1.8} />
-          </button>
+        {/* Background image + overlay */}
+        <div className="absolute inset-0 overflow-hidden">
+          <img
+            src={MOBILE_BG}
+            alt=""
+            className="h-[110%] w-full object-cover object-center opacity-25 grayscale-[20%]"
+            loading="eager"
+          />
+          <div className="absolute inset-0 bg-burgundy-darker/90 adire-cream" />
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-6 py-8" aria-label="Mobile">
-          <ul className="space-y-1">
-            {NAV_LINKS.map((link, i) => (
-              <li key={link.href} className="reveal" style={{ animation: `fade-up .5s ${150 + i * 70}ms both` }}>
-                <Link
-                  href={link.href}
-                  onClick={onClose}
-                  className="group flex items-center justify-between border-b border-ink/10 py-4"
-                >
-                  <span className="font-serif text-3xl text-ink transition-colors group-hover:text-burgundy">
-                    {link.label}
-                  </span>
-                  <span className="text-gold transition-transform group-hover:-translate-x-1 group-hover:translate-x-1">
-                    →
-                  </span>
-                </Link>
-              </li>
-            ))}
-            <li>
-              <a
-                href="/our-story#experience"
-                onClick={onClose}
-                className="flex items-center justify-between border-b border-ink/10 py-4"
-              >
-                <span className="font-serif text-3xl text-ink transition-colors hover:text-burgundy">Experience</span>
-                <span className="text-gold">→</span>
-              </a>
-            </li>
-          </ul>
-
-          <div className="mt-8 space-y-3">
-            <Link
-              href="/menu"
+        <div className="relative z-10 flex min-h-full flex-col px-7 py-6">
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <span className="logo-mark flex items-baseline gap-1 text-xl font-medium tracking-[0.04em] text-paper">
+              Chow
+              <span className="font-serif italic text-gold-soft">Heaven</span>
+            </span>
+            <button
               onClick={onClose}
-              className="flex w-full items-center justify-center gap-2 bg-burgundy px-7 py-4 text-sm font-bold tracking-wide text-paper"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-sm text-paper transition-colors hover:bg-paper/10"
+              aria-label="Close menu"
             >
-              <UtensilsCrossed className="h-4 w-4" aria-hidden /> ORDER ONLINE
-            </Link>
-            {user ? (
-              <Link
-                href={user.role === "ADMIN" || user.role === "STAFF" ? "/admin" : "/account"}
-                onClick={onClose}
-                className="flex w-full items-center justify-center gap-2 border border-ink/20 px-7 py-4 text-sm font-bold text-ink"
-              >
-                <UserRound className="h-4 w-4" aria-hidden /> Hi, {user.name.split(" ")[0]}
-                {count > 0 ? ` · ${count} in cart` : ""}
-              </Link>
-            ) : (
-              <Link
-                href="/login"
-                onClick={onClose}
-                className="flex w-full items-center justify-center gap-2 border border-ink/20 px-7 py-4 text-sm font-bold text-ink"
-              >
-                <UserRound className="h-4 w-4" aria-hidden /> Sign in / Create account
-              </Link>
-            )}
+              <X className="h-7 w-7" strokeWidth={1.5} />
+            </button>
           </div>
-        </nav>
 
-        <div className="border-t border-ink/10 bg-paper-warm px-6 py-5 text-sm text-ink-muted">
-          <p className="flex items-center gap-2.5"><Phone className="h-4 w-4 text-gold" aria-hidden /> {settings.phone}</p>
-          <p className="mt-2 flex items-start gap-2.5"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden /> {settings.address}</p>
-          <p className="mt-2 flex items-center gap-2.5"><Clock className="h-4 w-4 text-gold" aria-hidden /> {settings.hours}</p>
+          {/* Links */}
+          <nav className="mt-12 flex-1" aria-label="Mobile">
+            <ul className="space-y-1">
+              {allLinks.map((link, i) => (
+                <li
+                  key={link.href}
+                  className={open ? "page-enter" : ""}
+                  style={{ animationDelay: open ? `${80 + i * 60}ms` : undefined }}
+                >
+                  <Link
+                    href={link.href}
+                    onClick={onClose}
+                    className="group flex items-center justify-between border-b border-paper/12 py-4"
+                  >
+                    <span className="font-serif text-[2rem] font-medium tracking-tight text-paper transition-colors group-hover:text-gold-soft">
+                      {link.label}
+                    </span>
+                    <span className="text-gold transition-transform duration-300 group-hover:translate-x-1.5">
+                      →
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-10 space-y-3">
+              <Link
+                href="/menu"
+                onClick={onClose}
+                className="flex w-full items-center justify-center gap-2 bg-gold px-7 py-4 text-[0.82rem] font-bold uppercase tracking-[0.18em] text-night transition-all hover:bg-gold-deep"
+              >
+                <UtensilsCrossed className="h-4 w-4 transition-transform duration-300 group-hover:rotate-6" aria-hidden />
+                ORDER ONLINE
+              </Link>
+              {user ? (
+                <Link
+                  href={user.role === "ADMIN" || user.role === "STAFF" ? "/admin" : "/account"}
+                  onClick={onClose}
+                  className="flex w-full items-center justify-center gap-2 border border-paper/20 bg-paper/5 px-7 py-4 text-sm font-semibold text-paper transition-colors hover:bg-paper/10"
+                >
+                  <UserRound className="h-4 w-4" aria-hidden /> Hi, {user.name.split(" ")[0]}
+                  {count > 0 ? ` · ${count} in cart` : ""}
+                </Link>
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={onClose}
+                  className="flex w-full items-center justify-center gap-2 border border-paper/20 bg-paper/5 px-7 py-4 text-sm font-semibold text-paper transition-colors hover:bg-paper/10"
+                >
+                  <UserRound className="h-4 w-4" aria-hidden /> Sign in / Create account
+                </Link>
+              )}
+            </div>
+          </nav>
+
+          {/* Footer info */}
+          <div className="mt-auto border-t border-paper/10 pt-5 text-[0.82rem] text-paper/60">
+            <p className="flex items-center gap-2.5"><Phone className="h-4 w-4 text-gold" aria-hidden /> {settings.phone}</p>
+            <p className="mt-2 flex items-start gap-2.5"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden /> {settings.address}</p>
+            <p className="mt-2 flex items-center gap-2.5"><Clock className="h-4 w-4 text-gold" aria-hidden /> {settings.hours}</p>
+          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Star, ArrowRight, ChefHat, Flame, Utensils } from "lucide-react";
+import { Star, ArrowRight, ChefHat, Flame, Utensils, UtensilsCrossed, CalendarDays } from "lucide-react";
 
 import { prisma } from "@/lib/db";
 import { formatMoney } from "@/lib/utils";
@@ -9,8 +9,11 @@ import { SITE } from "@/lib/constants";
 import { Reveal } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { RatingStars } from "@/components/ui/skeleton";
+import { PageHero } from "@/components/ui/page-hero";
 
-const HERO_IMG = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/A_plate_of_jollof_rice_and_chicken.jpg/1200px-A_plate_of_jollof_rice_and_chicken.jpg";
+const HERO_1 = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/A_plate_of_jollof_rice_and_chicken.jpg/1600px-A_plate_of_jollof_rice_and_chicken.jpg";
+const HERO_2 = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Suya_with_pepper_sauce.jpg/1600px-Suya_with_pepper_sauce.jpg";
+const HERO_3 = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pot_of_Egusi_soup.jpg/1280px-Pot_of_Egusi_soup.jpg";
 const STORY_IMG = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Suya_with_pepper_sauce.jpg/1200px-Suya_with_pepper_sauce.jpg";
 const INTRO_IMG = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pot_of_Egusi_soup.jpg/960px-Pot_of_Egusi_soup.jpg";
 
@@ -45,49 +48,25 @@ export default async function HomePage() {
   return (
     <>
       {/* ═══ HERO ═══ */}
-      <section className="relative flex h-[min(100dvh,900px)] min-h-[600px] items-center overflow-hidden">
-        <Image
-          src={HERO_IMG}
-          alt="Plate of Nigerian jollof rice and grilled chicken"
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-night/85 via-night/55 to-night/75" />
-
-        <div className="relative z-10 container-x py-24">
-          <Reveal>
-            <p className="eyebrow text-gold-soft">Est. 2024 — Lagos, Nigeria</p>
-          </Reveal>
-          <Reveal delay={100}>
-            <h1 className="mt-6 font-serif text-[clamp(2.8rem,7vw,5.5rem)] font-semibold leading-[1.02] tracking-tightest text-paper">
-              THE TASTE OF<br />
-              NIGERIA, REIMAGINED
-            </h1>
-          </Reveal>
-          <Reveal delay={250}>
-            <p className="mt-7 max-w-lg text-lg leading-relaxed text-paper/75">
-              Authentic Nigerian flavours presented with contemporary elegance —
-              from smoky jollof rice to sizzling suya platters, every dish
-              celebrates home.
-            </p>
-          </Reveal>
-          <Reveal delay={400}>
-            <div className="mt-12 flex flex-wrap gap-4">
-              <Link href="/menu" className="btn-primary text-base tracking-wider">
-                ORDER ONLINE
-              </Link>
-              <Link
-                href="/reservations"
-                className="btn border-paper/40 bg-transparent px-7 py-3.5 text-sm font-semibold tracking-wide text-paper transition-all hover:border-paper hover:bg-paper/10"
-              >
-                RESERVE A TABLE
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+      <PageHero
+        images={[
+          { src: HERO_1, alt: "Plate of smoky Nigerian party jollof rice with grilled chicken" },
+          { src: HERO_2, alt: "Charcoal-grilled Nigerian suya skewers with pepper sauce" },
+          { src: HERO_3, alt: "Pot of rich Nigerian egusi soup" },
+        ]}
+        eyebrow="Est. 2024 — Lagos, Nigeria"
+        title={
+          <>
+            THE TASTE OF<br />
+            NIGERIA, REIMAGINED
+          </>
+        }
+        subtitle="Authentic Nigerian flavours, thoughtfully prepared and served with contemporary elegance — from smoky jollof rice to sizzling suya platters, every plate celebrates home."
+        ctas={[
+          { href: "/menu", label: "Order Online", variant: "gold" },
+          { href: "/reservations", label: "Reserve a Table", variant: "outline-light" },
+        ]}
+      />
 
       {/* ═══ INTRO ═══ */}
       <section className="section-space">
@@ -198,10 +177,13 @@ export default async function HomePage() {
       )}
 
       {/* ═══ EXPERIENCE STRIP ═══ */}
-      <section id="experience" className="relative overflow-hidden bg-burgundy py-28 grain">
+      <section id="experience" className="relative overflow-hidden bg-burgundy py-28 grain adire-cream">
         <div className="relative z-10 container-x text-center">
           <Reveal>
-            <p className="eyebrow text-gold-soft">The Chow Heaven Experience</p>
+            <div className="flex justify-center">
+              <span className="hairline-gold" />
+            </div>
+            <p className="eyebrow mt-6 text-gold-soft justify-center">The Chow Heaven Experience</p>
           </Reveal>
           <Reveal delay={100}>
             <h2 className="mt-4 font-serif text-4xl font-semibold leading-[1.08] tracking-tightest text-paper sm:text-5xl">
@@ -272,7 +254,7 @@ export default async function HomePage() {
       )}
 
       {/* ═══ FINAL CTA ═══ */}
-      <section className="relative overflow-hidden bg-paper-warm py-28">
+      <section className="relative overflow-hidden bg-paper-warm py-28 motif-gold">
         <div className="absolute inset-0 right-0 top-0 hidden opacity-40 lg:block">
           <Image
             src={STORY_IMG}

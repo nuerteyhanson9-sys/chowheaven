@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import { formatMoney } from "@/lib/utils";
 import { MenuClient } from "@/components/menu/menu-client";
+import { PageHero } from "@/components/ui/page-hero";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,6 +11,10 @@ export const metadata: Metadata = {
 };
 
 export const revalidate = 120;
+
+const HERO_1 = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/A_plate_of_jollof_rice_and_chicken.jpg/1200px-A_plate_of_jollof_rice_and_chicken.jpg";
+const HERO_2 = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Suya_with_pepper_sauce.jpg/1200px-Suya_with_pepper_sauce.jpg";
+const HERO_3 = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pot_of_Egusi_soup.jpg/960px-Pot_of_Egusi_soup.jpg";
 
 async function getMenu() {
   const [categories, items] = await Promise.all([
@@ -54,23 +59,25 @@ export default async function MenuPage() {
   const menu = await getMenu();
 
   return (
-    <section className="pt-32 pb-20">
-      <div className="container-x">
-        <p className="eyebrow">Explore our dishes</p>
-        <h1 className="mt-4 font-serif text-4xl font-semibold tracking-tightest sm:text-5xl">
-          The Menu
-        </h1>
-        <p className="mt-4 max-w-xl text-[15px] text-ink-muted">
-          Every dish is prepared to order using the freshest ingredients — honouring
-          tradition, served with care.
-        </p>
-      </div>
-      <div className="container-x mt-12">
-        <MenuClient
-          categories={menu.categories}
-          items={menu.items}
-        />
-      </div>
-    </section>
+    <>
+      <PageHero
+        images={[
+          { src: HERO_1, alt: "House-special Nigerian party jollof rice" },
+          { src: HERO_2, alt: "Charcoal-grilled suya with pepper sauce" },
+          { src: HERO_3, alt: "Rich, authentic Nigerian egusi soup" },
+        ]}
+        eyebrow="Explore our dishes"
+        title="THE MENU"
+        subtitle="Nigerian flavours, our way. Every dish is prepared to order using the freshest ingredients — honouring tradition, served with care."
+        showScroll={false}
+        align="center"
+      />
+
+      <section className="pb-24 pt-20">
+        <div className="container-x">
+          <MenuClient categories={menu.categories} items={menu.items} />
+        </div>
+      </section>
+    </>
   );
 }

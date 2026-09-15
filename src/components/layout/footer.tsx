@@ -10,7 +10,7 @@ export function Footer({ settings }: { settings: Record<string, string> }) {
       links: [
         { label: "Menu", href: "/menu" },
         { label: "Our Story", href: "/our-story" },
-        { label: "Experience", href: "/our-story#experience" },
+        { label: "Experience", href: "/experience" },
         { label: "Gallery", href: "/gallery" },
       ],
     },
