@@ -12,9 +12,9 @@ export const metadata: Metadata = {
 
 export const revalidate = 120;
 
-const HERO_1 = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/A_plate_of_jollof_rice_and_chicken.jpg/1200px-A_plate_of_jollof_rice_and_chicken.jpg";
-const HERO_2 = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Suya_with_pepper_sauce.jpg/1200px-Suya_with_pepper_sauce.jpg";
-const HERO_3 = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pot_of_Egusi_soup.jpg/960px-Pot_of_Egusi_soup.jpg";
+const HERO_1 = "/images/menu/party-jollof.jpg";
+const HERO_2 = "/images/menu/suya-platter.jpg";
+const HERO_3 = "/images/menu/grilled-catfish.jpg";
 
 async function getMenu() {
   const [categories, items] = await Promise.all([
