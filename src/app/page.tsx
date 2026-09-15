@@ -11,9 +11,9 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { RatingStars } from "@/components/ui/skeleton";
 import { PageHero } from "@/components/ui/page-hero";
 
-const HERO_1 = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/A_plate_of_jollof_rice_and_chicken.jpg/1600px-A_plate_of_jollof_rice_and_chicken.jpg";
-const HERO_2 = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Suya_with_pepper_sauce.jpg/1600px-Suya_with_pepper_sauce.jpg";
-const HERO_3 = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pot_of_Egusi_soup.jpg/1280px-Pot_of_Egusi_soup.jpg";
+const HERO_1 = "/images/menu/grilled-catfish.jpg";
+const HERO_2 = "/images/menu/party-jollof.jpg";
+const HERO_3 = "/images/menu/suya-platter.jpg";
 const STORY_IMG = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Suya_with_pepper_sauce.jpg/1200px-Suya_with_pepper_sauce.jpg";
 const INTRO_IMG = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Pot_of_Egusi_soup.jpg/960px-Pot_of_Egusi_soup.jpg";
 
@@ -50,9 +50,9 @@ export default async function HomePage() {
       {/* ═══ HERO ═══ */}
       <PageHero
         images={[
-          { src: HERO_1, alt: "Plate of smoky Nigerian party jollof rice with grilled chicken" },
-          { src: HERO_2, alt: "Charcoal-grilled Nigerian suya skewers with pepper sauce" },
-          { src: HERO_3, alt: "Pot of rich Nigerian egusi soup" },
+          { src: HERO_1, alt: "Whole grilled catfish served with Nigerian sides and pepper sauce" },
+          { src: HERO_2, alt: "Plate of smoky Nigerian party jollof rice" },
+          { src: HERO_3, alt: "Charcoal-grilled Nigerian suya skewers with pepper sauce" },
         ]}
         eyebrow="Est. 2024 — Lagos, Nigeria"
         title={

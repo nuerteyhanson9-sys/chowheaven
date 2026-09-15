@@ -12,9 +12,9 @@ export const metadata: Metadata = {
 
 export const revalidate = 120;
 
-const HERO_1 = "/images/menu/party-jollof.jpg";
-const HERO_2 = "/images/menu/suya-platter.jpg";
-const HERO_3 = "/images/menu/grilled-catfish.jpg";
+const HERO_1 = "/images/menu/grilled-catfish.jpg";
+const HERO_2 = "/images/menu/party-jollof.jpg";
+const HERO_3 = "/images/menu/suya-platter.jpg";
 
 async function getMenu() {
   const [categories, items] = await Promise.all([
@@ -62,9 +62,9 @@ export default async function MenuPage() {
     <>
       <PageHero
         images={[
-          { src: HERO_1, alt: "House-special Nigerian party jollof rice" },
-          { src: HERO_2, alt: "Charcoal-grilled suya with pepper sauce" },
-          { src: HERO_3, alt: "Rich, authentic Nigerian egusi soup" },
+          { src: HERO_1, alt: "Whole grilled catfish served with Nigerian sides and pepper sauce" },
+          { src: HERO_2, alt: "House-special Nigerian party jollof rice" },
+          { src: HERO_3, alt: "Charcoal-grilled suya with pepper sauce" },
         ]}
         eyebrow="Explore our dishes"
         title="THE MENU"
